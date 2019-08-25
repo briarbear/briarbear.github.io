@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="并发,阻塞队列,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文摘自《Java并发编程的艺术-方腾飞》   本节将介绍什么是阻塞队列，以及Java中阻塞队列的4种四种处理方式，并介绍Java7（Java8相同）中提供的7种阻塞队列，稍后分析阻塞队列的一种实现方式">
+<meta name="keywords" content="并发,阻塞队列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发-Java中的阻塞队列">
+<meta property="og:url" content="https://briarbear.github.io/2018/07/04/Java并发-Java中的阻塞队列/index.html">
+<meta property="og:site_name" content="briarbear | 熊大">
+<meta property="og:description" content="本文摘自《Java并发编程的艺术-方腾飞》   本节将介绍什么是阻塞队列，以及Java中阻塞队列的4种四种处理方式，并介绍Java7（Java8相同）中提供的7种阻塞队列，稍后分析阻塞队列的一种实现方式">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-25T08:28:49.576Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发-Java中的阻塞队列">
+<meta name="twitter:description" content="本文摘自《Java并发编程的艺术-方腾飞》   本节将介绍什么是阻塞队列，以及Java中阻塞队列的4种四种处理方式，并介绍Java7（Java8相同）中提供的7种阻塞队列，稍后分析阻塞队列的一种实现方式">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://briarbear.github.io/2018/07/04/Java并发-Java中的阻塞队列/">
+
+
+
+
+
+  <title>Java并发-Java中的阻塞队列 | briarbear | 熊大</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">briarbear | 熊大</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">/- 记录技术成长点滴 -/</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://briarbear.github.io/2018/07/04/Java并发-Java中的阻塞队列/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Briar·bear">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="briarbear | 熊大">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发-Java中的阻塞队列</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T09:57:54+08:00">
+                2018-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/04/Java并发-Java中的阻塞队列/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/04/Java并发-Java中的阻塞队列/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>本文摘自《Java并发编程的艺术-方腾飞》</p>
+</blockquote>
+<blockquote>
+<p>本节将介绍什么是阻塞队列，以及Java中阻塞队列的4种四种处理方式，并介绍Java7（Java8相同）中提供的7种阻塞队列，稍后分析阻塞队列的一种实现方式</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="1-什么是阻塞队列"><a href="#1-什么是阻塞队列" class="headerlink" title="1. 什么是阻塞队列"></a>1. 什么是阻塞队列</h2><p>​    阻塞队列（<code>BlockingQueue</code>）是一个支持两个附加操作的队列。这两个附加的操作支持阻塞的插入和移除方法</p>
+<blockquote>
+<ol>
+<li><em>支持阻塞的插入方法：意思是当队列满时，队列会阻塞插入元素的线程，直到队列不满</em></li>
+<li><em>支持阻塞的移除方法：意思是在队列为空时，获取元素的线程会等待队列变为非空</em>    </li>
+</ol>
+</blockquote>
+<p>阻塞队列常用于生产者和消费者的场景，生产者是向队列里添加元素的线程，消费者是从队列里取元素的线程。阻塞队列就是生产者用来存放元素、消费者用来获取元素的容器</p>
+<p>​    在阻塞队列不可用时，这两个附加操作提供了4种处理方式，如表1所示</p>
+<ul>
+<li><em>插入和移除操作的 4 中处理方式</em></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">方法 / 处理方式</th>
+<th align="center">抛出异常</th>
+<th align="center">返回特殊值</th>
+<th align="center">一直阻塞</th>
+<th align="center">超时退出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">插入方法</td>
+<td align="center">add(e)</td>
+<td align="center">offer(e)</td>
+<td align="center">put(e)</td>
+<td align="center">offer(e,time,unit)</td>
+</tr>
+<tr>
+<td align="center">移除方法</td>
+<td align="center">remove(e)</td>
+<td align="center">poll()</td>
+<td align="center">take()</td>
+<td align="center">poll(time,unit)</td>
+</tr>
+<tr>
+<td align="center">检查方法</td>
+<td align="center">element()</td>
+<td align="center">peek()</td>
+<td align="center">不可用</td>
+<td align="center">不可用</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>抛出异常</strong>：当队列满时，如果再往队列里插入元素，会抛出 <code>IllegalStateException（&quot;Queue full&quot;）</code>异常。当队列空时，从队列里获取元素会抛出 <code>NoSuchElementException</code>异常</li>
+<li><strong>返回特殊值</strong>：当往队列插入元素时，会返回元素是否插入成功，成功返回 true。如果是移除方法，则是从队列里取出一个元素，如果没有则返回 <code>null</code></li>
+<li><strong>一直阻塞</strong>：当阻塞队列满时，如果生产者线程往队列里 <code>put</code> 元素，队列会一直阻塞生产者线程，直到队列可用或者响应中断退出。当队列空时，如果消费者线程从队列里<code>take</code> 元素，队列会阻塞住消费者线程，直到队列不为空</li>
+<li><strong>超时退出</strong>：当阻塞队列满时，如果生产者线程往队列里插入元素，队列会阻塞生产者线程一段时间，如果超过了指定的时间，生产者线程就会退出</li>
+</ul>
+<p>这两个附加操作的 4 种处理方式不方便记忆，所以我找了一下这几个方法的规律。<code>put</code>和 <code>take</code> 分别尾首含有字母 <code>t</code>，<code>offer</code> 和 <code>poll</code> 都含有字母 <code>o</code></p>
+<blockquote>
+<p>注意：如果是无界阻塞队列，队列不可能会出现满的情况，所以使用 <code>put</code> 或 <code>offer</code> 方法永远不会被阻塞，而且使用 <code>offer</code> 方法时，该方法永远返回 <code>true</code></p>
+</blockquote>
+<hr>
+<h2 id="2-Java里的阻塞队列"><a href="#2-Java里的阻塞队列" class="headerlink" title="2. Java里的阻塞队列"></a>2. Java里的阻塞队列</h2><p>JDK7提供了7个阻塞队列，如下：</p>
+<ul>
+<li><p><code>ArrayBlockingQueue</code>：一个由数组结构组成的有界阻塞队列</p>
+</li>
+<li><p><code>LinkedBlockingQueue</code>：一个由链表结构组成的有界阻塞队列</p>
+</li>
+<li><p><code>PriorityBlockingQueue</code>：一个支持优先级排序的无界阻塞队列</p>
+</li>
+<li><p><code>DelayQueue</code>：一个使用优先级队列实现的无界阻塞队列</p>
+</li>
+<li><p><code>SynchronousQueue</code>：一个不存储元素的阻塞队列</p>
+</li>
+<li><p><code>LinkedTransferQueue</code>：一个由链表结构组成的无界阻塞队列</p>
+</li>
+<li><p><code>LinkedBlockingDeque</code>：一个由链表结构组成的双向阻塞队列。</p>
+<hr>
+</li>
+</ul>
+<h4 id="1-ArrayBlockingQueue"><a href="#1-ArrayBlockingQueue" class="headerlink" title="1. ArrayBlockingQueue"></a>1. <strong>ArrayBlockingQueue</strong></h4><ul>
+<li>​ <code>ArrayBlockingQueue</code> 是一个用数组实现的有界阻塞队列。此队列按照先进先出（FIFO）的原则对元素进行排序</li>
+<li>默认情况下不保证线程公平的访问队列，所谓公平访问队列是指阻塞的线程，可以按照阻塞的先后顺序访问队列，即先阻塞线程先访问队列。非公平性是对先等待的线程是非公平的，当队列可用时，阻塞的线程都可以争夺访问队列的资格，有可能先阻塞的线程最后才访问队列。为了保证公平性，通常会降低吞吐量。我们可以使用以下代码创建一个公平的阻塞队列</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ArrayBlockingQueue  fairQueue  =  <span class="keyword">new</span>   ArrayBlockingQueue (<span class="number">1000</span>. <span class="keyword">true</span>) ;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>访问者的公平性是使用可重入锁实现的，代码如下：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span> <span class="params">(<span class="keyword">int</span> capacity, <span class="keyword">boolean</span> fair)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (capacity &lt;= <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="keyword">this</span>.items = <span class="keyword">new</span> Object[capacity];</span><br><span class="line">    lock = <span class="keyword">new</span> ReentrantLock(fair);</span><br><span class="line">    notEmpty  =  lock.newCondition();</span><br><span class="line">    notFull = lock.newCondition();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-LinkedBlockingQueue"><a href="#2-LinkedBlockingQueue" class="headerlink" title="2. LinkedBlockingQueue"></a>2. <strong>LinkedBlockingQueue</strong></h4><ul>
+<li><code>LinkedBlockingQueue</code>是一个用链表实现的有界阻塞队列。此队列的默认和最大长度为<code>Integer.MAX VALUE</code>。此队列按照先进先出的原则对元素进行排序。</li>
+</ul>
+<h4 id="3-PriorityBlockingQueue"><a href="#3-PriorityBlockingQueue" class="headerlink" title="3. PriorityBlockingQueue"></a>3. <strong>PriorityBlockingQueue</strong></h4><ul>
+<li><code>PriorityBlockingQueue</code>是一个支持优先级的无界阻塞队列。默认情况下元素采取自然顺序升序排列。也可以自定义类实现<code>compareTo()</code>方法来指定元素排序规则，或者初始化<code>PriorityBlockingQueue</code>时，指定构造参数<code>Comparator</code>来对元素进行排序。需要注意的是不能保证同优先级元素的顺序。</li>
+</ul>
+<h4 id="4-DelayQueue"><a href="#4-DelayQueue" class="headerlink" title="4. DelayQueue"></a>4. <strong>DelayQueue</strong></h4><ul>
+<li><code>DelayQueue</code>是一个支持延时获取元素的无界阻塞队列。队列使用<code>PriorityQueue</code>来实现。队列中的元素必须实现<code>Delayed</code>接口，在创建元素时可以指定多久才能从队列中获取当前元素。只有在延迟期满时才能从队列中提取元素</li>
+<li><code>DelayQueue</code>非常有用，可以将<code>DelayQueue</code>运用在以下应用场景:<ul>
+<li>缓存系统的设计：可以用<code>DelayQueue</code>保存缓存元素的有效期，使用一个线程循环查询<code>DelayQueue</code>，一旦能从<code>DelayQueue</code>中获取元素时，表示缓存有效期到了</li>
+<li>定时任务调度：使用<code>DelayQueue</code>保存当天将会执行的任务和执行时间，一旦从DelayQueue中获取到任务就开始执行，比如<code>TimerQueue</code>就是使用<code>DelayQueue</code>实现的</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-SynchronousQueue"><a href="#5-SynchronousQueue" class="headerlink" title="5. SynchronousQueue"></a>5. <strong>SynchronousQueue</strong></h4><ul>
+<li><code>SynchronousQueue</code>是一个不存储元素的阻塞队列。每一个put操作必须等待一个take操作，否则不能继续添加元素</li>
+<li>它支持公平访问队列。默认情况下线程采用非公平性策略访问队列。使用以下构造方法可以创建公平性访问的<code>SynchronousQueue</code>，如果设置为<code>true</code>，则等待的线程会采用先进先出的顺序访问队列</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">SynchronousQueue</span><span class="params">(<span class="keyword">boolean</span> fair)</span></span>&#123;</span><br><span class="line">    transferer = fair?<span class="keyword">new</span> TransferQueue():<span class="keyword">new</span> TransferStack();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>SynchronousQueue</code>可以看成是一个传球手，负责把生产者线程处理的数据直接传递给消费者线程。队列本身并不存储任何元素，非常适合传递性场景。<code>SynchronousQueue</code>的吞吐量高于<code>LinkedBlockingQueue</code>和<code>ArrayBlockingQueue</code></li>
+</ul>
+<h4 id="6-LinkedTransferQueue"><a href="#6-LinkedTransferQueue" class="headerlink" title="6. LinkedTransferQueue"></a>6. <strong>LinkedTransferQueue</strong></h4><ul>
+<li><p><code>LinkedTransferQueue</code>是一个由链表结构组成的无界阻塞<code>TransferQueue</code>队列。相对于其他阻塞队列，<code>LinkedTransferQueue</code>多了<code>tryTransfer</code>和<code>transfer</code>方法。</p>
+<ul>
+<li><p><code>transfer</code>方法</p>
+<p>如果当前有消费者正在等待接收元素（消费者使用<code>take0</code>方法或带时间限制的<code>poll0</code>方法时），<code>transfer</code>方法可以把生产者传人的元素立刻<code>transfer</code>（传输）给消费者。如果没有消费者在等待接收元素，<code>transfer</code>方法会将元素存放在队列的<code>tail</code>节点，并等到该元素被消费者消费了才返回。<code>transfer</code>方法的关键代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Node pred = tryAppend(S,haveData);</span><br><span class="line"><span class="keyword">return</span> awaitMatch(s,pred,e,(how = TIMED),nanos);</span><br></pre></td></tr></table></figure>
+
+<p>第一行代码是试图把存放当前元素的s节点作为tail节点。第二行代码是让CPU自旋等待消费者消费元素。因为自旋会消耗CPU，所以自旋一定的次数后使用Thread.yield0方法来暂停当前正在执行的线程，并执行其他线程</p>
+</li>
+<li><p><code>tryTransfer</code>方法</p>
+<ul>
+<li><code>tryTransfer</code>方法是用来试探生产者传人的元素是否能直接传给消费者。如果没有消费者等待接收元素，则返回<code>false</code>。和<code>transfer</code>方法的区别是<code>tryTransfer</code>方法无论消费者是否接收，方法立即返回，而<code>transfer</code>方法是必须等到消费者消费了才返回。</li>
+<li>对于带有时间限制的<code>tryTransfer(E e，long timeout，TimeUnit unit)</code>方法，试图把生产者传人的元素直接传给消费者，但是如果没有消费者消费该元素则等待指定的时间再返回，如果超时还没消费元素，则返回<code>false</code>，如果在超时时间内消费了元素，则返回<code>true</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="7-LinkedBlockingDeque"><a href="#7-LinkedBlockingDeque" class="headerlink" title="7. LinkedBlockingDeque"></a>7. <strong>LinkedBlockingDeque</strong></h4><ul>
+<li><p><code>LinkedBlockingDeque</code>是一个由链表结构组成的双向阻塞队列。所谓双向队列指的是可以从队列的两端插入和移出元素。双向队列因为多了一个操作队列的入口，在多线程同时人队时，也就减少了一半的竞争。相比其他的阻塞队列，<code>LinkedBlockingDeque</code>多了<code>addFirst</code>、<code>addLast</code>、<code>offerFirst</code>、<code>offerLast</code>、<code>peekFirst</code>和<code>peekLast</code>等方法，以<code>First</code>单词结尾的方法，表示插入、获取( peek)或移除双端队列的第一个元素。以<code>Last</code>单词结尾的方法，表示插入、获取或移除双端队列的最后一个元素。另外，插入方法<code>add</code>等同于<code>addLast</code>，移除方法<code>remove</code>等效于<code>removeFirst</code>。但是<code>take</code>方法却等同于<code>takeFirst</code>，不知道是不是<code>JDK</code>的<code>bug</code>，使用时还是用带有<code>First</code>和<code>Last</code>后缀的方法更清楚。</p>
+</li>
+<li><p>在初始化<code>LinkedBlockingDeque</code>时可以设置容量防止其过度膨胀。另外，双向阻塞队列可以运用在“工作窃取”模式中。</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>请我喝杯茶……</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="Briar·bear 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Briar·bear 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/并发/" rel="tag"># 并发</a>
+          
+            <a href="/tags/阻塞队列/" rel="tag"># 阻塞队列</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/03/Spring-AOP核心原理及手写实现/" rel="next" title="Spring-AOP核心原理及手写实现">
+                <i class="fa fa-chevron-left"></i> Spring-AOP核心原理及手写实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/04/Java并发-阻塞队列实现生产者消费者/" rel="prev" title="Java并发-阻塞队列实现生产者消费者">
+                Java并发-阻塞队列实现生产者消费者 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Briar·bear</p>
+              <p class="site-description motion-element" itemprop="description">Java程序员成长之路</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/briarbear" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是阻塞队列"><span class="nav-number">1.</span> <span class="nav-text">1. 什么是阻塞队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Java里的阻塞队列"><span class="nav-number">2.</span> <span class="nav-text">2. Java里的阻塞队列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-ArrayBlockingQueue"><span class="nav-number">2.0.1.</span> <span class="nav-text">1. ArrayBlockingQueue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-LinkedBlockingQueue"><span class="nav-number">2.0.2.</span> <span class="nav-text">2. LinkedBlockingQueue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-PriorityBlockingQueue"><span class="nav-number">2.0.3.</span> <span class="nav-text">3. PriorityBlockingQueue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-DelayQueue"><span class="nav-number">2.0.4.</span> <span class="nav-text">4. DelayQueue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-SynchronousQueue"><span class="nav-number">2.0.5.</span> <span class="nav-text">5. SynchronousQueue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-LinkedTransferQueue"><span class="nav-number">2.0.6.</span> <span class="nav-text">6. LinkedTransferQueue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-LinkedBlockingDeque"><span class="nav-number">2.0.7.</span> <span class="nav-text">7. LinkedBlockingDeque</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Briar·bear</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'briarbear',
+            repo: 'briarbear.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e99dbaf6534c9ba030d5f5afd1560fb297482038',
+            
+                client_id: '36d62a461ec074823399'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

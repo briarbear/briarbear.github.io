@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="blog,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="说明: 经过两天的折腾, 也算把这个事情搞定了,顺手写下这边手记.笔者之前已经使用SpringBoot搭建了个人博客站点, 博客预览 . 完整代码已开源,可见博客站点的说明页. 而之所以又着手搭建这个站点,主要考虑到,那个服务器租期为一年,后期维护麻烦,为减少成本,打算慢慢迁移至此. 这边随笔主要记录使用Hexo+GitHub搭建博客的流程,希望对您有所帮助,喜欢点个Star,谢谢.  1.">
+<meta name="keywords" content="blog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo+GitPage+Gitments+yilia博客搭建手记">
+<meta property="og:url" content="https://briarbear.github.io/2018/06/22/Hexo-GitPage-Gitments-yilia博客搭建手记/index.html">
+<meta property="og:site_name" content="briarbear | 熊大">
+<meta property="og:description" content="说明: 经过两天的折腾, 也算把这个事情搞定了,顺手写下这边手记.笔者之前已经使用SpringBoot搭建了个人博客站点, 博客预览 . 完整代码已开源,可见博客站点的说明页. 而之所以又着手搭建这个站点,主要考虑到,那个服务器租期为一年,后期维护麻烦,为减少成本,打算慢慢迁移至此. 这边随笔主要记录使用Hexo+GitHub搭建博客的流程,希望对您有所帮助,喜欢点个Star,谢谢.  1.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.briarbear.cn/201806221530_904.png">
+<meta property="og:image" content="http://cdn.briarbear.cn/201806221936_116.png">
+<meta property="og:image" content="http://cdn.briarbear.cn/201806221914_399.png">
+<meta property="og:updated_time" content="2019-08-25T08:28:49.572Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo+GitPage+Gitments+yilia博客搭建手记">
+<meta name="twitter:description" content="说明: 经过两天的折腾, 也算把这个事情搞定了,顺手写下这边手记.笔者之前已经使用SpringBoot搭建了个人博客站点, 博客预览 . 完整代码已开源,可见博客站点的说明页. 而之所以又着手搭建这个站点,主要考虑到,那个服务器租期为一年,后期维护麻烦,为减少成本,打算慢慢迁移至此. 这边随笔主要记录使用Hexo+GitHub搭建博客的流程,希望对您有所帮助,喜欢点个Star,谢谢.  1.">
+<meta name="twitter:image" content="http://cdn.briarbear.cn/201806221530_904.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://briarbear.github.io/2018/06/22/Hexo-GitPage-Gitments-yilia博客搭建手记/">
+
+
+
+
+
+  <title>Hexo+GitPage+Gitments+yilia博客搭建手记 | briarbear | 熊大</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">briarbear | 熊大</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">/- 记录技术成长点滴 -/</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://briarbear.github.io/2018/06/22/Hexo-GitPage-Gitments-yilia博客搭建手记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Briar·bear">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="briarbear | 熊大">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hexo+GitPage+Gitments+yilia博客搭建手记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-22T14:58:08+08:00">
+                2018-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/随笔/" itemprop="url" rel="index">
+                    <span itemprop="name">随笔</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/22/Hexo-GitPage-Gitments-yilia博客搭建手记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/06/22/Hexo-GitPage-Gitments-yilia博客搭建手记/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<blockquote>
+<p>说明: 经过两天的折腾, 也算把这个事情搞定了,顺手写下这边手记.笔者之前已经使用<code>SpringBoot</code>搭建了个人博客站点, <a href="http://www.briarbear.cn" target="_blank" rel="noopener">博客预览</a> . 完整代码已开源,可见博客站点的说明页. 而之所以又着手搭建这个站点,主要考虑到,那个服务器租期为一年,后期维护麻烦,为减少成本,打算慢慢迁移至此. 这边随笔主要记录使用Hexo+GitHub搭建博客的流程,希望对您有所帮助,喜欢点个Star,谢谢.</p>
+</blockquote>
+<h2 id="1-主要步骤"><a href="#1-主要步骤" class="headerlink" title="1.  主要步骤"></a>1.  主要步骤</h2><ul>
+<li>安装<code>Git</code>、 <code>Node.js</code>(本文示例为Windows平台)</li>
+<li>创建<code>Github</code>仓库,开启<code>GitPage</code></li>
+<li>安装、使用<code>Hexo</code>,更换主题</li>
+<li>图床、 <code>Markdown编辑器</code></li>
+<li>多端同步，<code>Gitment</code>评论等其他问题</li>
+</ul>
+<a id="more"></a>
+
+<hr>
+<h2 id="2-安装Git、Node-js"><a href="#2-安装Git、Node-js" class="headerlink" title="2. 安装Git、Node.js"></a>2. 安装Git、Node.js</h2><ul>
+<li>安装<code>Git</code>，本文就不详述步骤，<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">具体可参考-廖雪峰Git教程</a></li>
+<li>安装<code>Node.js</code>，<a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">下载网站</a>，笔者下载的是<code>LTS-Windows64位 5.6.0</code>安装版本</li>
+<li>安装时注意保持勾选 <code>add to path</code>，任意目录右键 <code>Git Bash Here</code>，输入 <code>npm -v</code>，检验安装是否成功，显示版本号，则表示正常</li>
+</ul>
+<hr>
+<h2 id="3-创建GitHub仓库，设为GitPages"><a href="#3-创建GitHub仓库，设为GitPages" class="headerlink" title="3. 创建GitHub仓库，设为GitPages"></a>3. 创建GitHub仓库，设为GitPages</h2><ul>
+<li><p>创建一个仓库，命名为 <code>用户名.github.io</code>,如 <code>briarbear.github.io</code></p>
+</li>
+<li><p>这样的命名即为开启 <code>GitPages</code>，点开仓库的<code>setting</code>，可以看到<code>GitHub Pages</code>说明</p>
+<p><img src="http://cdn.briarbear.cn/201806221530_904.png" alt></p>
+</li>
+<li><p>则博客站点域名即为 <code>用户名.github.io</code></p>
+</li>
+</ul>
+<hr>
+<h2 id="4-安装Hexo"><a href="#4-安装Hexo" class="headerlink" title="4. 安装Hexo"></a>4. 安装Hexo</h2><ul>
+<li><p>安装教程可参看 <a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">官方文档</a>，中文版，详尽易懂 </p>
+</li>
+<li><p>主要步骤为 </p>
+<ul>
+<li><p>安装： <code>npm install -g hexo-cli</code>  </p>
+</li>
+<li><p>初始化：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> hexo init &lt;folder&gt;</span><br><span class="line"><span class="meta">$</span> cd &lt;folder&gt;</span><br><span class="line"><span class="meta">$</span> npm install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置：重点配置<code>deploy</code> ，使用<code>Git</code>同步方式与<code>GItHub</code>同步，具体详见 <a href="https://hexo.io/zh-cn/docs/configuration.html" target="_blank" rel="noopener">官方说明</a></p>
+<p>如笔者的配置，完整的详细配置，可见文末本博客站点的开源：</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/deployment.html</span></span><br><span class="line"><span class="attr">deploy:</span> </span><br><span class="line"><span class="attr">type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">repo:</span> <span class="string">git@github.com:briarbear/briarbear.github.io.git</span></span><br><span class="line"><span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>安装<code>Git</code>插件：<code>npm install hexo-deployer-git --save</code></p>
+<ul>
+<li>启动：</li>
+</ul>
+</li>
+<li><p>此时就可以依次输入命令； <code>hexo clean</code>， <code>hexo generate</code>, <code>hexo server</code></p>
+</li>
+<li><p>即本地启动完成：在浏览器输入：<code>http://localhost:4000</code>,即可以看到初始效果</p>
+</li>
+</ul>
+<hr>
+<h2 id="5-使用Hexo"><a href="#5-使用Hexo" class="headerlink" title="5. 使用Hexo"></a>5. 使用Hexo</h2><ul>
+<li>常用命令:</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">hexo</span> <span class="string">init</span> <span class="string">[folder]</span> <span class="comment"># 新建一个网站。如果没有设置 folder ，Hexo 默认在目前的文件夹建立网站。</span></span><br><span class="line"></span><br><span class="line"><span class="string">hexo</span> <span class="string">new</span> <span class="string">[layout]</span> <span class="string">&lt;title&gt;</span></span><br><span class="line"><span class="comment">#新建一篇文章。如果没有设置 layout 的话，默认使用 _config.yml 中的 default_layout 参数代替。如果标题包含空格的话，请使用引号括起来。</span></span><br><span class="line"></span><br><span class="line"><span class="string">hexo</span> <span class="string">generate</span>  <span class="comment"># 生成静态文件。-d 文件生成后立即部署网站 -w 监视文件变动 </span></span><br><span class="line"><span class="string">hexo</span> <span class="string">g</span> <span class="comment">#简写</span></span><br><span class="line"></span><br><span class="line"><span class="string">hexo</span> <span class="string">publish</span> <span class="string">[layout]</span> <span class="string">&lt;filename&gt;</span>  <span class="comment"># 发表草稿。</span></span><br><span class="line"></span><br><span class="line"><span class="string">hexo</span> <span class="string">server</span></span><br><span class="line"><span class="comment"># 启动服务器。默认情况下，访问网址为： http://localhost:4000/。</span></span><br><span class="line"><span class="comment"># -p 重设端口 -s 只使用静态文件 -l 启动日志记录</span></span><br><span class="line"></span><br><span class="line"><span class="string">hexo</span> <span class="string">deploy</span>  <span class="comment"># 部署网站。-g 部署之前预先生成静态文件</span></span><br><span class="line"><span class="string">hexo</span> <span class="string">d</span> <span class="comment">#简写</span></span><br><span class="line"></span><br><span class="line"><span class="string">hexo</span> <span class="string">clean</span>  <span class="comment">#清除缓存文件 (db.json) 和已生成的静态文件 (public)。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="6-使用主题"><a href="#6-使用主题" class="headerlink" title="6. 使用主题"></a>6. 使用主题</h2><blockquote>
+<p><code>hexo</code>官方提供了大量的 <a href="https://hexo.io/themes/" target="_blank" rel="noopener">优秀主题</a>，如果选中某款主题，点击主题，移至页面底部，一般都可以看到主题的版权说明，点击即可以进入主题的<code>github</code>仓库，如选中第一个主题<code>A-RSnippet</code>，下图所示：</p>
+</blockquote>
+<p><img src="http://cdn.briarbear.cn/201806221936_116.png" alt></p>
+<ul>
+<li>笔者使用的 <a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="noopener">yilia</a>主题</li>
+<li>在<code>hexo</code>的目录中，主题文件位于 <code>./themes</code>, 主题的主要流程<ul>
+<li>在主题目录中，<code>git clone 主题仓库</code></li>
+<li>修改主题的配置文件：<code>_config.yml</code></li>
+</ul>
+</li>
+<li>具体使用流程，可参考一个 <a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="noopener">yilla主题使用教程</a> </li>
+<li>如果喜欢笔者的主题,已做了一些修改，可以在文本的<code>github</code>仓库中<code>clone</code>下来，<code>./themes/yilla</code></li>
+</ul>
+<hr>
+<h2 id="7-Markdown编辑器与图床"><a href="#7-Markdown编辑器与图床" class="headerlink" title="7. Markdown编辑器与图床"></a>7. Markdown编辑器与图床</h2><ul>
+<li>笔者使用的 <a href="https://typora.io/" target="_blank" rel="noopener">Typora</a>编辑器，一款非常优秀的markdown编辑器，满足你对markdown编辑器所有的幻想，（即时预览，仅此一家）</li>
+<li>在<code>hexo</code>中，使用<code>hexo new</code>新建文章后，再去<code>./source/_posts</code>目录下找到目标文档，使用<code>Typora</code>编辑器编辑</li>
+<li>而使用Markdown编辑器，我们经常会遇到图片问题，这里提供两种处理方案<ul>
+<li>第一种方案：【相对路径】在<code>hexo</code>配置文件中，开启 <code>post_asset_folder: true</code>，新建文件会生成文件对应的文件夹，在markdown中可以使用相对路径来引用图片</li>
+<li>第二种方案：【绝对路径】笔者使用的方案，使用在线的图床，这样可以更好的方便使用markdown文件，在任意地方打开都能正确的渲染，而使用绝对路径，就得使用图床网站来保存图片</li>
+</ul>
+</li>
+<li>关于图床<ul>
+<li>推荐 <a href="https://www.qiniu.com/" target="_blank" rel="noopener">七牛云</a>，实名认证，送免费存储空间，存储图片够用</li>
+</ul>
+</li>
+<li>但是，使用图床，如果我们每次使用一个图片，都要先上传到图床，再复制外链，再粘贴 ，这样效率就低的可怕，有没有一种工具，我复制一张图片，后台自动上传到图床，然后返回外链至剪切板，这样在markdown编辑器中直接就可以使用呢？</li>
+<li>有，当然有！！！！Mac下有付费的应用，Windows下推荐 <a href="https://github.com/jiwenxing/qimage-win" target="_blank" rel="noopener">qImage</a>，使用方法参看具体链接</li>
+<li>最终效果：使用 <code>Alt + S</code> 截图（推荐截图贴图软件 <a href="https://zh.snipaste.com/" target="_blank" rel="noopener">snipaste</a> ），复制图片，在typora中使用快捷键 <code>Ctrl + Alt + V</code>，则直接生成图片</li>
+</ul>
+<hr>
+<h2 id="8-多端同步与Gitment"><a href="#8-多端同步与Gitment" class="headerlink" title="8. 多端同步与Gitment"></a>8. 多端同步与Gitment</h2><ul>
+<li><p>在<code>hexo</code>中，通过<code>git</code>连接<code>github</code>仓库，它同步的文件实际上仅为经过<code>hexo</code>生成的静态文件，那么怎样将源文件在多端同步，这样是可以在多台设备都可以编辑博客，解决思路：<code>Git 分支</code></p>
+</li>
+<li><p>详细的解决方案，<a href="https://www.zhihu.com/question/21193762" target="_blank" rel="noopener">知乎：使用hexo，如果换了电脑怎么更新博客？</a></p>
+</li>
+<li><p>到此为止，静态博客基本可用，但由于是静态网站，无法评论，解决思路是结合<code>Gitments</code>来解决，同时，<code>yilia</code>主题也提供了多种评论方式，具体可参看 <a href="https://github.com/litten/hexo-theme-yilia/wiki/%E5%A4%9A%E8%AF%B4%E3%80%81%E7%95%85%E8%A8%80%E3%80%81%E7%BD%91%E6%98%93%E4%BA%91%E8%B7%9F%E5%B8%96%E3%80%81Disqus%E8%AF%84%E8%AE%BA%E9%85%8D%E7%BD%AE" target="_blank" rel="noopener">wiki</a></p>
+</li>
+<li><p>而使用<code>Gitments</code>，<a href="https://imsun.net/posts/gitment-introduction/" target="_blank" rel="noopener">使用教程</a></p>
+</li>
+<li><p>笔者的配置文件</p>
+<p><img src="http://cdn.briarbear.cn/201806221914_399.png" alt></p>
+</li>
+</ul>
+<hr>
+<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/26625249" target="_blank" rel="noopener">GitHub+Hexo 搭建个人网站详细教程</a></li>
+<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">Hexo中文文档</a></li>
+<li><a href="https://imsun.net/posts/gitment-introduction/" target="_blank" rel="noopener">Gitment：使用 GitHub Issues 搭建评论系统</a></li>
+<li><a href="https://www.zhihu.com/question/21193762" target="_blank" rel="noopener">知乎：使用hexo，如果换了电脑怎么更新博客？</a></li>
+<li><a href="https://github.com/litten/hexo-theme-yilia" target="_blank" rel="noopener">一个简洁优雅的hexo主题 yilia</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>请我喝杯茶……</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="Briar·bear 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Briar·bear 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/blog/" rel="tag"># blog</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/21/about/" rel="next" title="about">
+                <i class="fa fa-chevron-left"></i> about
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/25/Java集合-EnumMap工作原理及实现/" rel="prev" title="Java集合-EnumMap工作原理及实现">
+                Java集合-EnumMap工作原理及实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Briar·bear</p>
+              <p class="site-description motion-element" itemprop="description">Java程序员成长之路</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/briarbear" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-主要步骤"><span class="nav-number">1.</span> <span class="nav-text">1.  主要步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-安装Git、Node-js"><span class="nav-number">2.</span> <span class="nav-text">2. 安装Git、Node.js</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-创建GitHub仓库，设为GitPages"><span class="nav-number">3.</span> <span class="nav-text">3. 创建GitHub仓库，设为GitPages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-安装Hexo"><span class="nav-number">4.</span> <span class="nav-text">4. 安装Hexo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-使用Hexo"><span class="nav-number">5.</span> <span class="nav-text">5. 使用Hexo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-使用主题"><span class="nav-number">6.</span> <span class="nav-text">6. 使用主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Markdown编辑器与图床"><span class="nav-number">7.</span> <span class="nav-text">7. Markdown编辑器与图床</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-多端同步与Gitment"><span class="nav-number">8.</span> <span class="nav-text">8. 多端同步与Gitment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关链接"><span class="nav-number">9.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Briar·bear</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'briarbear',
+            repo: 'briarbear.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e99dbaf6534c9ba030d5f5afd1560fb297482038',
+            
+                client_id: '36d62a461ec074823399'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
