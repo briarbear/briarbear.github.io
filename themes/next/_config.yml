@@ -26,6 +26,7 @@ override: false
 
 # For example, you put your favicons into `hexo-site/source/images` directory.
 # Then need to rename & redefine they on any other names, otherwise icons from Next will rewrite your custom icons in Hexo.
+# 网站logo
 favicon:
   small: /images/favicon-16x16-next.png
   medium: /images/favicon-32x32-next.png
@@ -93,7 +94,7 @@ index_with_subtitle: false
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, question icon will be loaded.
 menu:
   home: / || home
-  #about: /about/ || user
+  about: /about/ || user
   tags: /tags/ || tags
   categories: /categories/ || th
   archives: /archives/ || archive
@@ -108,12 +109,13 @@ menu_icons:
 
 # ---------------------------------------------------------------
 # Scheme Settings
+# 视图布局
 # ---------------------------------------------------------------
 
 # Schemes
 # scheme: Muse
 scheme: Mist
-#scheme: Pisces
+# scheme: Pisces
 #scheme: Gemini
 
 
@@ -160,11 +162,12 @@ links_layout: block
 #avatar: /images/avatar.gif
 
 # Table Of Contents in the Sidebar
+# 目录
 toc:
   enable: true
 
-  # Automatically add list number to toc.
-  number: true
+  # 自动编号 Automatically add list number to toc.
+  number: false
 
   # If true, all words will placed on next lines if header width longer then sidebar width.
   wrap: false
@@ -249,9 +252,9 @@ post_wordcount:
 
 # Reward
 # 评论打赏
-reward_comment: 请我喝杯茶……
-wechatpay: /images/wechat.jpg
-alipay: /images/alipay.jpg
+# reward_comment: 请我喝杯茶……
+# wechatpay: /images/wechat.jpg
+# alipay: /images/alipay.jpg
 #bitcoin: /images/bitcoin.png
 # 站点建立时间
 since: 2018
@@ -419,9 +422,9 @@ gitment:
   cleanly: false # Hide 'Powered by ...' on footer, and more
   language: # Force language, or auto switch by theme
   github_user: briarbear # MUST HAVE, Your Github ID
-  github_repo: briarbear.github.io # MUST HAVE, The repo you use to store Gitment comments
-  client_id: 36d62a461ec074823399 # MUST HAVE, Github client id for the Gitment
-  client_secret: e99dbaf6534c9ba030d5f5afd1560fb297482038 # EITHER this or proxy_gateway, Github access secret token for the Gitment
+  github_repo: gitment # MUST HAVE, The repo you use to store Gitment comments
+  client_id: 512cfb4d4a196b4ee6f6 # MUST HAVE, Github client id for the Gitment
+  client_secret: 2aa927fc78092a27546f7615348dec89f92b9001 # EITHER this or proxy_gateway, Github access secret token for the Gitment
   proxy_gateway: # Address of api proxy, See: https://github.com/aimingoo/intersect
   redirect_protocol: # Protocol of redirect_uri with force_redirect_protocol when mint enabled
 
@@ -455,16 +458,16 @@ gitment:
 #           Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine,
 #           Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru
 needmoreshare2:
-  enable: false
+  enable: true
   postbottom:
-    enable: false
+    enable: true
     options:
       iconStyle: box
       boxForm: horizontal
       position: bottomCenter
       networks: Weibo,Wechat,Douban,QQZone,Twitter,Facebook
   float:
-    enable: false
+    enable: true
     options:
       iconStyle: box
       boxForm: horizontal
@@ -613,9 +616,10 @@ algolia_search:
     hits_stats: "${hits} results found in ${time} ms"
 
 # Local search
+# 本地搜索
 # Dependencies: https://github.com/flashlab/hexo-generator-search
 local_search:
-  enable: false
+  enable: true
   # if auto, trigger search by changing input
   # if manual, trigger search by pressing enter key or search button
   trigger: auto

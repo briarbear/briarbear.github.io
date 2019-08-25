@@ -77,6 +77,7 @@ pagination_dir: page
 # 主题
 # theme: landscape
 theme: next
+# theme: yilia
 
 # 部署 Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -84,3 +85,25 @@ deploy:
   type: git
   repo: git@github.com:briarbear/briarbear.github.io.git
   branch: master
+
+# 配置搜索
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
+
+# 配置分页问题
+# index_generator:
+#   per_page: 5
+
+archive_generator:
+  per_page: 20
+  yearly: true
+  monthly: true
+
+tag_generator:
+  per_page: 10
+
+# 侧边头像
+avatar: /images/photo.png
